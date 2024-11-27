@@ -12,6 +12,8 @@
 - Cycles: Paths that lead back to the starting node
 - Components: Isolated groups of connected nodes
 
+![Alt text](images/graph.png)
+
 ### Graph Representations
 
 1. Adjacency List (Most common)
