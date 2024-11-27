@@ -173,3 +173,12 @@
 - Lookups in visited set: O(1) time
 
 Remember: When dealing with undirected graphs, always consider cycle prevention using a visited set!
+
+
+## Course Reference
+The content in this repository is based on:
+
+> "Graph Algorithms for Technical Interviews" by Alvin/Structy (2021)  
+> Available at: https://www.youtube.com/watch?v=tWVWeAqZ0WU
+
+All credit for the course content and teaching methodology belongs to Structy and Alvin.
