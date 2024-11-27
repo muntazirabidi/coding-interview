@@ -135,6 +135,8 @@
   - City/road networks
   - File system directories
   - State machines
+ 
+![Alt text](images/grid.png)
 
 2. Problem Solving Steps
 
