@@ -12,7 +12,7 @@
 - Cycles: Paths that lead back to the starting node
 - Components: Isolated groups of connected nodes
 
-![Alt text](images/graph.png)
+![Alt text](images/graphs.png)
 
 ### Graph Representations
 
