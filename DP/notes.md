@@ -1,4 +1,4 @@
-# Memoization in Dynamic Programming (Python Implementation)
+# Memoization in Dynamic Programming
 
 ## Introduction
 Memoization is an optimization technique that speeds up programs by storing the results of expensive function calls and returning the cached result when the same inputs occur again. In Python, we can implement memoization using dictionaries.
