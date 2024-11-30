@@ -37,6 +37,8 @@ Dynamic Programming (DP) is a powerful algorithmic technique that solves complex
 - Use appropriate data structures (arrays, hash maps)
 - Consider optimization techniques (memoization/tabulation)
 
+![Alt text](images/implementation.png)
+
 ## Case Study 1: Longest Increasing Subsequence (LIS)
 
 ### Problem Definition
