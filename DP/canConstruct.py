@@ -53,4 +53,4 @@ def can_construct(target: str, word_bank: List[str], memo: Dict[str, bool] = Non
 
 # Example usage:
 print(can_construct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))  # True
-print(can_construct("skateboard", ["bo", "rd", "ate", "t",
+print(can_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))  # False
