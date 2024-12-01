@@ -212,11 +212,107 @@ points = [[1,1], [-2,-2], [3,3], [1,-1]]
 print(k_closest_points(points, 2))  # [[1,1], [1,-1]]
 ```
 
+Let me help you understand when to use heaps versus sorted arrays for finding medians, as this is a key decision that can greatly affect your code's performance.
+Let's compare both approaches by looking at what happens when we need to find the median in different scenarios:
+Scenario 1: One-time Median Calculation
+If you just need to find the median once for a fixed set of numbers:
+pythonCopy# Using sorted array
+numbers = [4, 1, 7, 3, 8, 2]
+sorted_nums = sorted(numbers)  # O(n log n)
+# Find median
+if len(sorted_nums) % 2 == 0:
+    median = (sorted_nums[len(sorted_nums)//2 - 1] + sorted_nums[len(sorted_nums)//2]) / 2
+else:
+    median = sorted_nums[len(sorted_nums)//2]
+Scenario 2: Stream of Numbers (Numbers keep coming)
+pythonCopy# Using heaps (as shown in previous example)
+calculator = RollingMedianCalculator()
+calculator.add_number(4)  # O(log n)
+calculator.add_number(1)  # O(log n)
+calculator.add_number(7)  # O(log n)
+Here's why the choice matters:
+Sorted Array Approach:
+
+Advantages:
+
+Simpler to understand and implement
+Better for one-time calculations
+Uses less memory (just one array)
+
+
+Disadvantages:
+
+Requires O(n log n) time to sort
+Very inefficient for streaming data as you need to resort every time
+
+
+
+Heap Approach:
+
+Advantages:
+
+Efficient for streaming data: O(log n) per insertion
+Maintains running median without resorting
+Perfect for interview questions about "running" or "streaming" medians
+
+
+Disadvantages:
+
+More complex to implement
+Uses more memory (two heaps)
+Overkill for one-time calculations
+
+
+
+So when should you use each? Here's a simple decision guide:
+
+Use Sorted Arrays when:
+
+pythonCopy# One-time median calculation
+def find_median_sorted(numbers):
+    sorted_nums = sorted(numbers)
+    n = len(sorted_nums)
+    mid = n // 2
+    return sorted_nums[mid] if n % 2 else (sorted_nums[mid-1] + sorted_nums[mid]) / 2
+
+# Example
+numbers = [4, 1, 7, 3, 8, 2]
+median = find_median_sorted(numbers)
+
+Use Heaps when:
+
+pythonCopy# The question mentions:
+# - "Running median"
+# - "Streaming data"
+# - "Find median after each insertion"
+# - "Calculate median as numbers come in"
+
+calculator = RollingMedianCalculator()
+stream = [4, 1, 7, 3, 8, 2]
+for num in stream:
+    median = calculator.add_number(num)
+    print(f"After adding {num}, median is {median}")
+Here's a practical example to help you recognize when to use each:
+pythonCopy# Interview Question 1: "Find the median of this array"
+def question1(numbers):
+    # Use sorted array - it's simpler and sufficient
+    return find_median_sorted(numbers)
+
+# Interview Question 2: "Design a class that finds the median 
+# of all numbers seen so far as new numbers are added"
+class question2:
+    # Use heaps - we need to maintain running median
+    def __init__(self):
+        self.calculator = RollingMedianCalculator()
+    
+    def add_number(self, num):
+        return self.calculator.add_number(num)
+Remember: The key is to look for words like "running", "streaming", or "as numbers come in" in the question. These are strong hints that you should use heaps. If it's just finding the median of a fixed set of numbers, use sorting.
+
 ## Contributing
 Feel free to contribute by:
 1. Forking the repository
 2. Creating a new branch for your feature
 3. Submitting a pull request
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+
