@@ -11,19 +11,32 @@ def depth_first_values(root):
     Returns:
         None
     """
-    if root is None:
-        return
+    if root is None: return []
 
+    result = []
     stack = [root]
 
     while stack:
         current = stack.pop()
-        print(current.data)
+        result.append(current.data)
 
         if current.right:
             stack.append(current.right)
         if current.left:
             stack.append(current.left)
+            
+    return result
+  
+
+def depth_first_values_recurive(root):
+  if root is None: return []
+  
+  left = depth_first_values_recurive(root.left)
+  right = depth_first_values_recurive(root.right)
+  
+  return [root.data] + left + right
+  
+  
 
 
 def build_sample_tree():
@@ -54,4 +67,5 @@ def build_sample_tree():
 if __name__ == '__main__':
     # Build the sample tree and perform depth-first traversal
     root_node = build_sample_tree()
-    depth_first_values(root_node)
+    print(depth_first_values(root_node))
+    print(depth_first_values_recurive(root_node))
