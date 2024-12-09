@@ -21,8 +21,8 @@ class SmallestInfiniteSet:
         Initializes the SmallestInfiniteSet object. 
         Starts with the smallest number set to 1 and an empty heap for storing returned numbers.
         """
-        self.heap: List[int] = []  # Min-heap to store numbers added back
-        self.in_heap: Set[int] = set()  # Set to track elements in the heap
+        self.heap: List[int] = []  
+        self.in_heap: Set[int] = set() 
         self.current: int = 1  # Counter for the next smallest number not yet popped
 
     def popSmallest(self) -> int:
@@ -38,7 +38,7 @@ class SmallestInfiniteSet:
         """
         if self.heap:
             smallest = heapq.heappop(self.heap)
-            self.in_heap.remove(smallest)  # Remove from the set to avoid duplicates
+            self.in_heap.remove(smallest)  
             return smallest
         else:
             self.current += 1
