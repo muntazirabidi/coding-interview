@@ -158,3 +158,37 @@ def test_solution():
 
 if __name__ == '__main__':
     test_solution()
+    
+    
+    
+    
+'''
+nums1 = [1, 3, 3, 2]  # Points per game
+nums2 = [2, 1, 3, 4]  # Teamwork ratings
+k = 3  # We need to select 3 players
+
+# After sorting by teamwork (nums2):
+pairs = [(4,2), (3,3), (2,1), (1,3)]  # (teamwork, points)
+
+# Let's walk through each iteration:
+
+# 1st player: teamwork=4, points=2
+min_heap = [2]
+current_sum = 2
+max_score = 0 (not enough players yet)
+
+# 2nd player: teamwork=3, points=3
+min_heap = [2, 3]
+current_sum = 5
+max_score = 0 (not enough players yet)
+
+# 3rd player: teamwork=2, points=1
+min_heap = [1, 2, 3]
+current_sum = 6
+max_score = 6 * 2 = 12  # First valid score!
+
+# 4th player: teamwork=1, points=3
+min_heap = [2, 3, 3]  # Removed 1 (smallest)
+current_sum = 8
+max_score = max(12, 8 * 1) = 12  # Previous score was better
+'''
