@@ -340,3 +340,298 @@ fancy_coffee = WhippedCreamDecorator(
 )
 print(f"{fancy_coffee.description()}: ${fancy_coffee.cost():.2f}")
 ```
+
+[Previous sections remain the same...]
+
+## Behavioral Patterns
+
+Behavioral patterns are concerned with communication between objects, how objects interact and distribute responsibility.
+
+### 1. Observer Pattern
+
+The Observer pattern establishes a one-to-many relationship between objects, where when one object changes state, all its dependents are notified and updated automatically.
+
+```python
+from abc import ABC, abstractmethod
+from typing import List
+
+class Subject(ABC):
+    """Abstract subject that observers can watch."""
+
+    def __init__(self):
+        """Initialize empty list of observers."""
+        self._observers: List[Observer] = []
+        self._state = None
+
+    def attach(self, observer: 'Observer') -> None:
+        """Add an observer to the notification list."""
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def detach(self, observer: 'Observer') -> None:
+        """Remove an observer from the notification list."""
+        self._observers.remove(observer)
+
+    def notify(self) -> None:
+        """Notify all observers of state change."""
+        for observer in self._observers:
+            observer.update(self._state)
+
+class WeatherStation(Subject):
+    """Concrete subject providing weather updates."""
+
+    @property
+    def temperature(self) -> float:
+        return self._state
+
+    @temperature.setter
+    def temperature(self, value: float) -> None:
+        """Set temperature and notify observers."""
+        self._state = value
+        self.notify()
+
+class Observer(ABC):
+    """Abstract observer that receives updates."""
+
+    @abstractmethod
+    def update(self, temperature: float) -> None:
+        """Receive update from subject."""
+        pass
+
+class TemperatureDisplay(Observer):
+    """Displays the temperature."""
+
+    def update(self, temperature: float) -> None:
+        print(f"Temperature Display: {temperature:.1f}°C")
+
+class TemperatureAlert(Observer):
+    """Alerts when temperature exceeds threshold."""
+
+    def __init__(self, threshold: float):
+        self.threshold = threshold
+
+    def update(self, temperature: float) -> None:
+        if temperature > self.threshold:
+            print(f"Alert! Temperature {temperature:.1f}°C exceeds {self.threshold}°C")
+
+# Usage
+weather_station = WeatherStation()
+
+# Create observers
+display = TemperatureDisplay()
+alert = TemperatureAlert(threshold=25.0)
+
+# Register observers
+weather_station.attach(display)
+weather_station.attach(alert)
+
+# Update temperature - all observers will be notified
+weather_station.temperature = 24.0  # Display updates, no alert
+weather_station.temperature = 27.0  # Display updates and alert triggers
+```
+
+### 2. Strategy Pattern
+
+The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It lets the algorithm vary independently from clients that use it.
+
+```python
+from abc import ABC, abstractmethod
+from typing import List
+
+class PaymentStrategy(ABC):
+    """Abstract base class for payment strategies."""
+
+    @abstractmethod
+    def pay(self, amount: float) -> bool:
+        """Process payment with the given strategy."""
+        pass
+
+class CreditCardPayment(PaymentStrategy):
+    """Credit card payment strategy."""
+
+    def __init__(self, card_number: str, expiry: str, cvv: str):
+        self.card_number = card_number
+        self.expiry = expiry
+        self.cvv = cvv
+
+    def pay(self, amount: float) -> bool:
+        # In real implementation, this would integrate with a payment gateway
+        print(f"Processing credit card payment of ${amount:.2f}")
+        print(f"Card number: {'*' * 12}{self.card_number[-4:]}")
+        return True
+
+class PayPalPayment(PaymentStrategy):
+    """PayPal payment strategy."""
+
+    def __init__(self, email: str):
+        self.email = email
+
+    def pay(self, amount: float) -> bool:
+        print(f"Processing PayPal payment of ${amount:.2f}")
+        print(f"PayPal account: {self.email}")
+        return True
+
+class CryptoPayment(PaymentStrategy):
+    """Cryptocurrency payment strategy."""
+
+    def __init__(self, wallet_address: str):
+        self.wallet_address = wallet_address
+
+    def pay(self, amount: float) -> bool:
+        print(f"Processing crypto payment of ${amount:.2f}")
+        print(f"Wallet: {self.wallet_address[:6]}...{self.wallet_address[-4:]}")
+        return True
+
+class ShoppingCart:
+    """Shopping cart that uses payment strategies."""
+
+    def __init__(self):
+        self.items: List[tuple] = []  # List of (item, price) tuples
+
+    def add_item(self, item: str, price: float) -> None:
+        """Add item to cart."""
+        self.items.append((item, price))
+
+    def total(self) -> float:
+        """Calculate total price."""
+        return sum(price for _, price in self.items)
+
+    def checkout(self, payment_strategy: PaymentStrategy) -> bool:
+        """Checkout using the specified payment strategy."""
+        amount = self.total()
+        if amount == 0:
+            raise ValueError("Cart is empty")
+
+        # Process payment using the provided strategy
+        return payment_strategy.pay(amount)
+
+# Usage
+# Create shopping cart and add items
+cart = ShoppingCart()
+cart.add_item("Laptop", 999.99)
+cart.add_item("Mouse", 29.99)
+
+# Create different payment strategies
+credit_card = CreditCardPayment("1234567890123456", "12/24", "123")
+paypal = PayPalPayment("user@example.com")
+crypto = CryptoPayment("0x742d35Cc6634C0532925a3b844Bc454e4438f44e")
+
+# Checkout with different payment methods
+cart.checkout(credit_card)  # Use credit card
+cart.checkout(paypal)      # Use PayPal
+cart.checkout(crypto)      # Use cryptocurrency
+```
+
+### 3. Command Pattern
+
+The Command pattern encapsulates a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
+
+```python
+from abc import ABC, abstractmethod
+from typing import List, Optional
+
+class Command(ABC):
+    """Abstract base class for commands."""
+
+    @abstractmethod
+    def execute(self) -> None:
+        """Execute the command."""
+        pass
+
+    @abstractmethod
+    def undo(self) -> None:
+        """Undo the command."""
+        pass
+
+class TextEditor:
+    """Text editor that maintains document state."""
+
+    def __init__(self):
+        self.text = ""
+
+    def insert_text(self, text: str) -> None:
+        """Insert text at current position."""
+        self.text += text
+
+    def delete_text(self, length: int) -> None:
+        """Delete specified number of characters from end."""
+        self.text = self.text[:-length]
+
+    def get_text(self) -> str:
+        """Get current text."""
+        return self.text
+
+class InsertTextCommand(Command):
+    """Command to insert text."""
+
+    def __init__(self, editor: TextEditor, text: str):
+        self.editor = editor
+        self.text = text
+
+    def execute(self) -> None:
+        self.editor.insert_text(self.text)
+
+    def undo(self) -> None:
+        self.editor.delete_text(len(self.text))
+
+class DeleteTextCommand(Command):
+    """Command to delete text."""
+
+    def __init__(self, editor: TextEditor, length: int):
+        self.editor = editor
+        self.length = length
+        self.deleted_text: Optional[str] = None
+
+    def execute(self) -> None:
+        # Store deleted text for undo
+        self.deleted_text = self.editor.get_text()[-self.length:]
+        self.editor.delete_text(self.length)
+
+    def undo(self) -> None:
+        if self.deleted_text:
+            self.editor.insert_text(self.deleted_text)
+
+class TextEditorInvoker:
+    """Invoker that maintains command history."""
+
+    def __init__(self, editor: TextEditor):
+        self.editor = editor
+        self.command_history: List[Command] = []
+
+    def execute_command(self, command: Command) -> None:
+        """Execute command and add to history."""
+        command.execute()
+        self.command_history.append(command)
+
+    def undo_last_command(self) -> None:
+        """Undo the last command."""
+        if self.command_history:
+            command = self.command_history.pop()
+            command.undo()
+
+# Usage
+# Create editor and invoker
+editor = TextEditor()
+invoker = TextEditorInvoker(editor)
+
+# Execute commands
+insert_hello = InsertTextCommand(editor, "Hello ")
+insert_world = InsertTextCommand(editor, "World!")
+delete_mark = DeleteTextCommand(editor, 1)  # Delete exclamation mark
+
+invoker.execute_command(insert_hello)
+print(editor.get_text())  # "Hello "
+
+invoker.execute_command(insert_world)
+print(editor.get_text())  # "Hello World!"
+
+invoker.execute_command(delete_mark)
+print(editor.get_text())  # "Hello World"
+
+# Undo commands
+invoker.undo_last_command()  # Undo delete
+print(editor.get_text())  # "Hello World!"
+
+invoker.undo_last_command()  # Undo second insert
+print(editor.get_text())  # "Hello "
+```
