@@ -1,4 +1,4 @@
-# N-Queens Problem: A Complete Interview Guide
+# N-Queens Problem:
 
 ## Understanding the Problem
 
