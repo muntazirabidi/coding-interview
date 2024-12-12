@@ -10,7 +10,8 @@ try:
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='your_password'  # Replace with your actual password
+        password='Lums_786@Tasneem',
+        database='testdatabase'
     )
     
     if connection.is_connected():
@@ -19,9 +20,9 @@ try:
         
         # Get cursor and database information
         cursor = connection.cursor()
-        cursor.execute("select database();")
+        cursor.execute("SELECT DATABASE();")  # Changed to SQL command syntax
         database = cursor.fetchone()
-        print("Current database:", database)
+        print("Current database:", database[0])  # Access the tuple's first element
         
         # Clean up
         cursor.close()
@@ -40,3 +41,7 @@ except mysql.connector.Error as err:
     print("Error Code:", err.errno)
     print("SQLSTATE:", err.sqlstate)
     print("Error Message:", err.msg)
+    
+    
+    
+    
